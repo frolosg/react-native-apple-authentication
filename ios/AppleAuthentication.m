@@ -1,6 +1,8 @@
 #import "AppleAuthentication.h"
 #import <React/RCTUtils.h>
 
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
 @implementation AppleAuthentication
 
 -(dispatch_queue_t)methodQueue
@@ -12,6 +14,10 @@ RCT_EXPORT_MODULE()
 
 -(NSDictionary *)constantsToExport
 {
+    if (SYSTEM_VERSION_LESS_THAN(@"13.0")) {
+        // code here
+        return @{};
+    }
   NSDictionary* scopes = @{@"FULL_NAME": ASAuthorizationScopeFullName, @"EMAIL": ASAuthorizationScopeEmail};
   NSDictionary* operations = @{
     @"LOGIN": ASAuthorizationOperationLogin,
